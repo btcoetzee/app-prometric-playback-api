@@ -1,0 +1,342 @@
+---
+trigger:
+  batch: false
+  branches:
+    include:
+    - trunk
+pool:
+  vmImage: 'ubuntu-16.04'
+variables:
+  azureContainerRegistry: 'decontainers.azurecr.io'
+  useClusterAdmin: true
+  buildMajor: 1
+  buildMinor: 0
+  buildVersion: $(buildMajor).$(buildMinor)
+  serviceName: app-prometric-helloworld-api
+stages:
+- stage: build_and_publication
+  displayName: Build - Test - Package - Publish
+  jobs:
+  - job: build_image
+    displayName: Build .Net Core application
+    steps:
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: restore
+        projects: '**/*.csproj'
+    - task: DotNetCoreCLI@2
+      displayName: Build
+      inputs:
+        command: build
+        projects: '**/*.csproj'
+  - job: run_unit_test
+    displayName: Run Unit Tests
+    dependsOn: build_image
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: test
+        projects: '**/*.Test/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+  - job: run_component_test
+    displayName: Run Component Tests
+    dependsOn: build_image
+    steps:
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: test
+        projects: '**/*.ComponentTest/*.csproj'
+        arguments: '--configuration $(buildConfiguration)'
+  - job: build_publish_image
+    displayName: Build and Publish image to Container Registry
+    dependsOn:
+    - run_unit_test
+    - run_component_test
+    steps:
+    - bash: |
+        IMAGE_NAME=$(echo "$(serviceName)" | tr "[:upper:]" "[:lower:]")
+        echo "##vso[task.setvariable variable=IMAGE_NAME]$IMAGE_NAME"
+      displayName: Ensure repo name is compatible with image name format
+    - task: AzureKeyVault@1
+      inputs:
+        azureSubscription: 'DE_NONPROD'
+        KeyVaultName: 'akv-ppe-nonprod'
+        SecretsFilter: '*'
+        RunAsPreJob: true
+    - task: replacetokens@3
+      inputs:
+        rootDirectory: 'src/'
+        targetFiles: '**/appsettings.*.json'
+        encoding: 'auto'
+        writeBOM: true
+        actionOnMissing: 'warn'
+        keepToken: false
+        tokenPrefix: '#{'
+        tokenSuffix: '}#'
+        useLegacyPattern: false
+        enableTelemetry: true
+    - task: Docker@1
+      displayName: Build container image
+      inputs:
+        command: build
+        containerregistrytype: Azure Container Registry
+        azureSubscriptionEndpoint: DE_UTILS
+        azureContainerRegistry: $(azureContainerRegistry)
+        dockerFile: Dockerfile
+        imageName: $(IMAGE_NAME)
+    - task: Docker@1
+      displayName: Tag container image
+      inputs:
+        containerregistrytype: 'Azure Container Registry'
+        command: tag
+        arguments: '$(azureContainerRegistry)/$(IMAGE_NAME):$(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)'
+        imageName: '$(azureContainerRegistry)/$(IMAGE_NAME):latest'
+    - task: Docker@1
+      displayName: Push image to registry
+      inputs:
+        command: push
+        containerregistrytype: Azure Container Registry
+        azureSubscriptionEndpoint: DE_UTILS
+        azureContainerRegistry: $(azureContainerRegistry)
+        imageName: '$(IMAGE_NAME):$(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)'
+- stage: ci_deployment
+  variables:
+    azureResourceGroup: NONPROD
+    kubernetesCluster: DE_Nonprod
+    deployment_name: $(serviceName)
+    namespace: ci
+    stage: ci
+    dnsDomain: nonprod.proproctor.prometric.com
+    buildid: $(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)
+    aadPodIdentityName: denonprod-aad-pod-identity
+    agwSslCertificateName: agw-akv-tls-cert-nonprod
+  dependsOn: build_and_publication
+  jobs:
+  - deployment: deploy_to_ci
+    environment: ci
+    displayName: Deploy to ci
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - bash: |
+              pip install -r requirements.txt
+              python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
+            displayName: Generates Kubernetes deployment manifests
+          - task: Kubernetes@1
+            displayName: Application image deployment to K8s.
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: apply
+              arguments:  -f kubernetes/deployment.yaml
+          - task: Kubernetes@1
+            displayName: Authenticate to AKS
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: login
+          - bash: bash ./validate_deployment.sh $(deployment_name) $(buildid) $(namespace)
+            displayName: Validate deployment rollout
+          - bash: rm kubernetes/deployment.yaml
+            displayName: Generated manifest clean up
+- stage: dev_deployment
+  variables:
+    azureResourceGroup: NONPROD
+    kubernetesCluster: DE_Nonprod
+    deployment_name: $(serviceName)
+    namespace: dev
+    stage: dev
+    dnsDomain: nonprod.proproctor.prometric.com
+    buildid: $(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)
+    aadPodIdentityName: denonprod-aad-pod-identity
+    agwSslCertificateName: agw-akv-tls-cert-nonprod
+  dependsOn: ci_deployment
+  jobs:
+  - deployment: deploy_to_dev
+    environment: dev
+    displayName: Deploy to dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - bash: |
+              pip install -r requirements.txt
+              python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
+            displayName: Generates Kubernetes deployment manifests
+          - task: Kubernetes@1
+            displayName: Application image deployment to K8s.
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: apply
+              arguments:  -f kubernetes/deployment.yaml
+          - task: Kubernetes@1
+            displayName: Authenticate to AKS
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: login
+          - bash: bash ./validate_deployment.sh $(deployment_name) $(buildid) $(namespace)
+            displayName: Validate deployment rollout
+          - bash: rm kubernetes/deployment.yaml
+            displayName: Generated manifest clean up
+- stage: qa_deployment
+  variables:
+    azureResourceGroup: NONPROD
+    kubernetesCluster: DE_Nonprod
+    deployment_name: $(serviceName)
+    namespace: qa
+    stage: qa
+    dnsDomain: nonprod.proproctor.prometric.com
+    buildid: $(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)
+    aadPodIdentityName: denonprod-aad-pod-identity
+    agwSslCertificateName: agw-akv-tls-cert-nonprod
+  dependsOn: dev_deployment
+  jobs:
+  - deployment: deploy_to_qa
+    environment: qa
+    displayName: Deploy to qa
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - bash: |
+              pip install -r requirements.txt
+              python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
+            displayName: Generates Kubernetes deployment manifests
+          - task: Kubernetes@1
+            displayName: Application image deployment to K8s.
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: apply
+              arguments:  -f kubernetes/deployment.yaml
+          - task: Kubernetes@1
+            displayName: Authenticate to AKS
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_NONPROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: login
+          - bash: bash ./validate_deployment.sh $(deployment_name) $(buildid) $(namespace)
+            displayName: Validate deployment rollout
+          - bash: rm kubernetes/deployment.yaml
+            displayName: Generated manifest clean up
+- stage: uat_deployment
+  variables:
+    azureResourceGroup: PROD
+    kubernetesCluster: DE_Prod
+    deployment_name: $(serviceName)
+    namespace: uat
+    stage: uat
+    dnsDomain: proproctor.prometric.com
+    buildid: $(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)
+    aadPodIdentityName: deprod-aad-pod-identity
+    agwSslCertificateName: agw-akv-tls-cert-prod
+  dependsOn: qa_deployment
+  jobs:
+  - deployment: deploy_to_uat
+    environment: uat
+    displayName: Deploy to uat
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - bash: |
+              pip install -r requirements.txt
+              python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
+            displayName: Generates Kubernetes deployment manifests
+          - task: Kubernetes@1
+            displayName: Application image deployment to K8s.
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_PROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: apply
+              arguments:  -f kubernetes/deployment.yaml
+          - task: Kubernetes@1
+            displayName: Authenticate to AKS
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_PROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: login
+          - bash: bash ./validate_deployment.sh $(deployment_name) $(buildid) $(namespace)
+            displayName: Validate deployment rollout
+          - bash: rm kubernetes/deployment.yaml
+            displayName: Generated manifest clean up
+- stage: prod_deployment
+  variables:
+    azureResourceGroup: PROD
+    kubernetesCluster: DE_Prod
+    deployment_name: $(serviceName)
+    namespace: prod
+    stage: prod
+    dnsDomain: proproctor.prometric.com
+    buildid: $(buildVersion).$(Build.BuildNumber).$(Build.SourceVersion)
+    aadPodIdentityName: deprod-aad-pod-identity
+    agwSslCertificateName: agw-akv-tls-cert-prod
+  dependsOn: uat_deployment
+  jobs:
+  - deployment: deploy_to_prod
+    environment: prod
+    displayName: Deploy to prod
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - checkout: self
+          - bash: |
+              pip install -r requirements.txt
+              python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
+            displayName: Generates Kubernetes deployment manifests
+          - task: Kubernetes@1
+            displayName: Application image deployment to K8s.
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_PROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: apply
+              arguments:  -f kubernetes/deployment.yaml
+          - task: Kubernetes@1
+            displayName: Authenticate to AKS
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: DE_PROD
+              azureResourceGroup: $(azureResourceGroup)
+              kubernetesCluster: $(kubernetesCluster)
+              useClusterAdmin: $(useClusterAdmin)
+              command: login
+          - bash: bash ./validate_deployment.sh $(deployment_name) $(buildid) $(namespace)
+            displayName: Validate deployment rollout
+          - bash: rm kubernetes/deployment.yaml
+            displayName: Generated manifest clean up #
