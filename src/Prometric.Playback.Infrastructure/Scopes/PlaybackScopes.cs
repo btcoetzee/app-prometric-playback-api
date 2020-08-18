@@ -2,9 +2,10 @@ namespace Prometric.Playback.Infrastructure.Scopes
 {
     public static class PlaybackScopes
     {
-        public static readonly string READ_BOOKS = "read:books";
-        public static readonly string WRITE_BOOKS = "write:books";
-        
-        
+
+        public static readonly string READ_RECORDING = "read:recordings";
+        public static readonly string WRITE_RECORDING = "write:recordings";
+
+
     }
 }

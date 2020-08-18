@@ -23,20 +23,23 @@ namespace Prometric.Playback.Infrastructure
     {
         public static IConveyBuilder AddInfrastructure(this IConveyBuilder builder)
         {
-            builder.Services.AddTransient<IBookRepository, RedisBookRepository>();
+
+
+            // Recordings
+            builder.Services.AddTransient<IRecordingRepository, RedisRecordingRepository>();
             builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy(PlaybackScopes.READ_BOOKS, 
+                options.AddPolicy(PlaybackScopes.READ_RECORDING,
                     policyBuilder => policyBuilder.Requirements.Add(
-                        new HasScopeRequirement(PlaybackScopes.READ_BOOKS, 
+                        new HasScopeRequirement(PlaybackScopes.READ_RECORDING,
                             "https://prometric.oktapreview.com/oauth2/ausu831293IEbvvD21d5")));
-                options.AddPolicy(PlaybackScopes.WRITE_BOOKS, 
+                options.AddPolicy(PlaybackScopes.WRITE_RECORDING,
                     policyBuilder => policyBuilder.Requirements.Add(
-                        new HasScopeRequirement(PlaybackScopes.WRITE_BOOKS, 
+                        new HasScopeRequirement(PlaybackScopes.WRITE_RECORDING,
                             "https://prometric.oktapreview.com/oauth2/ausu831293IEbvvD21d5")));
             });
-            
+
             return builder
                 .AddErrorHandler<ExceptionToResponseMapper>()
                 .AddJwt()
