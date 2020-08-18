@@ -41,16 +41,11 @@ namespace Prometric.Playback.Api
                                         var appOptions = httpContext.RequestServices.GetService<AppOptions>();
                                         return httpContext.Response.WriteAsync($"{appOptions.Name} {appOptions.Version}");
                                     })
-                                // Books
-                                    .Post<AddBook>(Routes.Books,
-                                        afterDispatch: (cmd,ctx) =>  ctx.Response.Created($"{Routes.Books}/{cmd.BookId}"), 
-                                        auth: false, policies: PlaybackScopes.WRITE_BOOKS)
-                                    .Get<GetBook, BookDto>($"{Routes.Books}/{{bookId}}", auth: false, policies: PlaybackScopes.READ_BOOKS )
                                 // Recordings
                                    .Post<AddRecording>(Routes.Recordings,
                                         afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Recordings}/{cmd.RecordingId}"),
-                                        auth: true, policies: PlaybackScopes.WRITE_BOOKS)
-                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}", auth: true,  policies: PlaybackScopes.READ_BOOKS)
+                                        auth: true, policies: PlaybackScopes.WRITE_RECORDING)
+                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}", auth: true,  policies: PlaybackScopes.READ_RECORDING)
                                 // Health
                                     .Get(Routes.Health, httpContext => {
                                         return httpContext.Response.WriteAsync("OK");

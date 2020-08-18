@@ -15,7 +15,8 @@ namespace Prometric.Playback.Infrastructure
         public ExceptionResponse Map(Exception exception)
             => exception switch
             {
-                BookAlreadyExistsException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
+
+                RecordingAlreadyExistsException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
                     HttpStatusCode.Conflict),
                 DomainException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
                     HttpStatusCode.BadRequest),

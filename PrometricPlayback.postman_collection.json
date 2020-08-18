@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "b2af13fa-fbf2-42e7-aca9-b00ecf5e5811",
-		"name": "HellloWorld",
+		"_postman_id": "b0bf865a-1abb-4ce3-aa0d-b59502390e7b",
+		"name": "PrometricPlayback",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -12,7 +12,7 @@
 					"name": "Reads",
 					"item": [
 						{
-							"name": "Fetch Book (Unauthorized)",
+							"name": "Fetch Recording (Unauthorized)",
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -20,14 +20,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/books/c459b330-c31d-484e-a8d5-6ecf76918140",
-									"protocol": "http",
+									"raw": "https://localhost:5001/recordings/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"protocol": "https",
 									"host": [
 										"localhost"
 									],
-									"port": "5000",
+									"port": "5001",
 									"path": [
-										"books",
+										"recordings",
 										"c459b330-c31d-484e-a8d5-6ecf76918140"
 									]
 								}
@@ -35,7 +35,7 @@
 							"response": []
 						},
 						{
-							"name": "Fetch Book (Unauthorized - Expired Token)",
+							"name": "Fetch Recording (Unauthorized - Expired Token)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -60,14 +60,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/books/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"raw": "http://localhost:5000/recordings/c459b330-c31d-484e-a8d5-6ecf76918140",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books",
+										"recordings",
 										"c459b330-c31d-484e-a8d5-6ecf76918140"
 									]
 								}
@@ -75,7 +75,7 @@
 							"response": []
 						},
 						{
-							"name": "Fetch Book (Authorized - Invalid Write Scope)",
+							"name": "Fetch Recording (Authorized - Invalid Write Scope)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -100,14 +100,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/books/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"raw": "http://localhost:5000/recordings/c459b330-c31d-484e-a8d5-6ecf76918140",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books",
+										"recordings",
 										"c459b330-c31d-484e-a8d5-6ecf76918140"
 									]
 								}
@@ -115,7 +115,7 @@
 							"response": []
 						},
 						{
-							"name": "Fetch Book (Authorized - Valid Read Scope)",
+							"name": "Fetch Recording (Authorized - Valid Read Scope)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -140,14 +140,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5000/books/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"raw": "http://localhost:5000/recordings/c459b330-c31d-484e-a8d5-6ecf76918140",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books",
+										"recordings",
 										"c459b330-c31d-484e-a8d5-6ecf76918140"
 									]
 								}
@@ -182,7 +182,7 @@
 					"name": "Writes",
 					"item": [
 						{
-							"name": "POST Book (Unauthorized)",
+							"name": "POST Recording (Unauthorized)",
 							"request": {
 								"auth": {
 									"type": "noauth"
@@ -191,7 +191,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"BookId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"Title\": \"Collie Wuz Here\"\r\n}",
+									"raw": "{\r\n    \"RecordingId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"TrackName\": \"Tha Track\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -199,21 +199,21 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/books",
+									"raw": "http://localhost:5000/recordings",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books"
+										"recordings"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "POST Book (Unauthorized - Expired Token)",
+							"name": "POST Recordings (Unauthorized - Expired Token)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -239,7 +239,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"BookId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"Title\": \"Collie Wuz Here\"\r\n}",
+									"raw": "{\r\n    \"RecordingId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"TrackName\": \"Anotha Track\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -247,21 +247,21 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/books",
+									"raw": "http://localhost:5000/recordings",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books"
+										"recordings"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "POST Book (Unuthorized - Invalid Read Scope)",
+							"name": "POST Recordings (Unuthorized - Invalid Read Scope)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -287,7 +287,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"BookId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"Title\": \"Collie Wuz Here\"\r\n}",
+									"raw": "{\r\n    \"RecordingId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"TrackName\": \"Track Ti Do\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -295,21 +295,21 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/books",
+									"raw": "http://localhost:5000/recordings",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books"
+										"recordings"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "POST Book (Authorized Write Scope)",
+							"name": "POST Recording (Authorized Write Scope)",
 							"request": {
 								"auth": {
 									"type": "oauth2",
@@ -335,7 +335,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"BookId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"Title\": \"Collie Wuz Here\"\r\n}",
+									"raw": "{\r\n    \"RecordingId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"TrackName\": \"Ultimate Track\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -343,14 +343,14 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:5000/books",
+									"raw": "http://localhost:5000/recordings",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "5000",
 									"path": [
-										"books"
+										"recordings"
 									]
 								}
 							},
@@ -385,7 +385,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "7125b611-8ffc-4857-8757-a08da25042cb",
+						"id": "9689094a-3993-4c8d-8b72-7c20e28573de",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -395,7 +395,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "0050bc89-6752-4478-9947-732863fefe38",
+						"id": "0bc915a7-639c-459e-af1a-00313b34142d",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -406,7 +406,7 @@
 			"protocolProfileBehavior": {}
 		},
 		{
-			"name": "GET healthcheck - http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/books",
+			"name": "GET healthcheck - https://localhost:5001/health",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -418,17 +418,14 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/",
-					"protocol": "http",
+					"raw": "https://localhost:5001/health",
+					"protocol": "https",
 					"host": [
-						"app-prometric-helloworld-api-dev",
-						"nonprod",
-						"proproctor",
-						"prometric",
-						"com"
+						"localhost"
 					],
+					"port": "5001",
 					"path": [
-						""
+						"health"
 					],
 					"query": [
 						{
@@ -447,33 +444,30 @@
 			"response": []
 		},
 		{
-			"name": "POST book - http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/books",
+			"name": "POST book - https://localhost:5001/recordings",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"title\":\"book title\"\n}"
+					"raw": "{\n    \"TrackName\":\"Name Of The Track\"\n}"
 				},
 				"url": {
-					"raw": "http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/books",
-					"protocol": "http",
+					"raw": "https://localhost:5001/recordings",
+					"protocol": "https",
 					"host": [
-						"app-prometric-helloworld-api-dev",
-						"nonprod",
-						"proproctor",
-						"prometric",
-						"com"
+						"localhost"
 					],
+					"port": "5001",
 					"path": [
-						"books"
+						"recordings"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "GET ID - http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/books",
+			"name": "GET ID - https://localhost:5001/recordings/{{recordingID}}",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -485,18 +479,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://app-prometric-helloworld-api-dev.nonprod.proproctor.prometric.com/books/{{bookID}}",
-					"protocol": "http",
+					"raw": "https://localhost:5001/recordings/{{recordingID}}",
+					"protocol": "https",
 					"host": [
-						"app-prometric-helloworld-api-dev",
-						"nonprod",
-						"proproctor",
-						"prometric",
-						"com"
+						"localhost"
 					],
+					"port": "5001",
 					"path": [
-						"books",
-						"{{bookID}}"
+						"recordings",
+						"{{recordingID}}"
 					]
 				}
 			},
