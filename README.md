@@ -4,7 +4,7 @@
 - [Metrics](http://localhost:5000/metrics)
 
 # Introduction
-The Hello World app is a reference app. It core business is a Bookstore. This app allows you to manage the inventory of a book store. This app is a work in progress and it is not complete yet.
+The Playback app is a reference app. It core business is Recordings. This app receives recordings and stores them in Azure. This app is a work in progress and it is not complete yet.
 
 # Prerequisites
 - [Docker](https://www.docker.com/)
@@ -38,16 +38,16 @@ For example, `appsettings.dev.json`. For local development, just add the snippet
 
 ## Building and running the api in docker.
 
-First, build the docker image and tag it as 'hello-world-api'
+First, build the docker image and tag it as 'playback-api'
 
-``` docker build -t hello-world-api:latest . ```
+``` docker build -t playback-api:latest . ```
 
-Next, run the docker image 'hello-world-api' latest,
+Next, run the docker image 'playback-api' latest,
     removing the container after it exits,
     in an interactive terminal,
     mapping port 80 of the container to port 5000 on the host.
 
-``` docker run --rm -it -p 5000:80 hello-world-api:latest ```
+``` docker run --rm -it -p 5000:80 playback-api:latest ```
 
 To run component and unit tests locally:
 ``` dotnet test /src ```
