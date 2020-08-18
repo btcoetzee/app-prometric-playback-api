@@ -29,5 +29,27 @@ namespace Prometric.Playback.Infrastructure.Redis
                 RecordingId = entity.Id,
                 TrackName = entity.TrackName
             };
+        public static string AsJson(this CompositionDocument doc)
+     => JsonConvert.SerializeObject(doc);
+
+        public static CompositionDocument AsDocument(this Composition entity)
+            => new CompositionDocument
+            {
+                Id = entity.Id,
+                CompositionName = entity.CompositionName
+            };
+
+        public static CompositionDocument AsCompositionDocument(this string json)
+            => JsonConvert.DeserializeObject<CompositionDocument>(json);
+
+        public static Composition AsEntity(this CompositionDocument doc)
+            => new Composition(doc.Id, doc.CompositionName);
+
+        public static CompositionDto AsDto(this Composition entity)
+            => new CompositionDto()
+            {
+                CompositionId = entity.Id,
+                CompositionName = entity.CompositionName
+            };
     }
 }

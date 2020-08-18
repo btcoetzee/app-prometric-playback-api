@@ -15,6 +15,7 @@ using Prometric.Playback.Application.Commands;
 using Prometric.Playback.Application.Queries;
 using Prometric.Playback.Application.DTO;
 using Prometric.Playback.Infrastructure.Scopes;
+using Convey.Persistence.Redis;
 
 namespace Prometric.Playback.Api
 {
@@ -32,6 +33,7 @@ namespace Prometric.Playback.Api
                                 .AddWebApi() // => Mandatory: All related WebApi registrations and configurations
                                 .AddApplication() // => Each project will have a grouping extension method: Application
                                 .AddInfrastructure() // => Each project will have a grouping extension method: Infrastructure
+                            .AddRedis()
                                 .Build())
                             // Configure is where we setup the 'actions' that occur in every single request.
                             .Configure(app => app
@@ -44,8 +46,13 @@ namespace Prometric.Playback.Api
                                 // Recordings
                                    .Post<AddRecording>(Routes.Recordings,
                                         afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Recordings}/{cmd.RecordingId}"),
-                                        auth: true, policies: PlaybackScopes.WRITE_RECORDING)
-                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}", auth: true,  policies: PlaybackScopes.READ_RECORDING)
+                                        auth: true, policies: PlaybackScopes.WRITE_PAYLOAD)
+                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}", auth: true,  policies: PlaybackScopes.READ_PAYLOAD)
+                               // Compositions
+                                   .Post<AddComposition>(Routes.Composition,
+                                        afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Composition}/{cmd.CompositionId}"),
+                                        auth: true, policies: PlaybackScopes.WRITE_PAYLOAD)
+                                    .Get<GetComposition, CompositionDto>($"{Routes.Composition}/{{compositionId}}", auth: true, policies: PlaybackScopes.READ_PAYLOAD)
                                 // Health
                                     .Get(Routes.Health, httpContext => {
                                         return httpContext.Response.WriteAsync("OK");

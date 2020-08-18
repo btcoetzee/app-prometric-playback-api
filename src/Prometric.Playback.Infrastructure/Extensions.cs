@@ -30,13 +30,13 @@ namespace Prometric.Playback.Infrastructure
             builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy(PlaybackScopes.READ_RECORDING,
+                options.AddPolicy(PlaybackScopes.READ_PAYLOAD,
                     policyBuilder => policyBuilder.Requirements.Add(
-                        new HasScopeRequirement(PlaybackScopes.READ_RECORDING,
+                        new HasScopeRequirement(PlaybackScopes.READ_PAYLOAD,
                             "https://prometric.oktapreview.com/oauth2/ausu831293IEbvvD21d5")));
-                options.AddPolicy(PlaybackScopes.WRITE_RECORDING,
+                options.AddPolicy(PlaybackScopes.WRITE_PAYLOAD,
                     policyBuilder => policyBuilder.Requirements.Add(
-                        new HasScopeRequirement(PlaybackScopes.WRITE_RECORDING,
+                        new HasScopeRequirement(PlaybackScopes.WRITE_PAYLOAD,
                             "https://prometric.oktapreview.com/oauth2/ausu831293IEbvvD21d5")));
             });
 

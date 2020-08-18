@@ -18,6 +18,8 @@ namespace Prometric.Playback.Infrastructure
 
                 RecordingAlreadyExistsException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
                     HttpStatusCode.Conflict),
+                CompositionAlreadyExistsException ex => new ExceptionResponse(new { code = GetCode(ex), reason = ex.Message },
+                    HttpStatusCode.Conflict),
                 DomainException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
                     HttpStatusCode.BadRequest),
                 AppException ex => new ExceptionResponse(new {code = GetCode(ex), reason = ex.Message},
