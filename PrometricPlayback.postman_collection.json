@@ -9,7 +9,7 @@
 			"name": "Local Debug",
 			"item": [
 				{
-					"name": "Reads",
+					"name": "Reads recordings",
 					"item": [
 						{
 							"name": "Fetch Recording (Unauthorized)",
@@ -179,7 +179,177 @@
 					"_postman_isSubFolder": true
 				},
 				{
-					"name": "Writes",
+					"name": "Reads compositions",
+					"item": [
+						{
+							"name": "Fetch Composition (Unauthorized)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:5001/compositions/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"compositions",
+										"c459b330-c31d-484e-a8d5-6ecf76918140"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Composition (Unauthorized - Expired Token)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlBBeHFMNXRrTXk5WVJyWEgxcjJvQ29vbXJacDAwdWhrc0RUQ2pfTS1nR1UiLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMjc0OCwiZXhwIjoxNTk3NDEzMDQ4LCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJ0ZXN0OnF1aWNrX2V4cGlyYXRpb24iXSwic3ViIjoiMG9hdThlYTBIRm1FSktRUnYxZDUifQ.UEQcWVIwdjsYRzhQh8vC7457B01IcZF6GdJQhkztt-nzHrG_uUnVxyK0alv46E6km5QLs3IoCwTWrwtN6k6dlkir8IXaL2BLjrJ6wGHInKtDUBhCbKV-QklyXBPd1OJTrXoTDDDtfb1gJYAlFSKQCJO1qZpGF5kkgx5IAIbdrqaRxvSlYC0OKhBptG0s0UrSNGuMYsyF8AkTjdJS1qSE7axZ8HhduPfkljDrSyEpZzJ7hiWP-EpC1sYQU4TzRCp9UWAGA0U_82jU8OCKblWxcOCNecE4JwTam4pWTtJm8sGwx90AY3tPSIkv2lupb4AM7U3qNq_uZtiOFJI4rH8zFA",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/compositions/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions",
+										"c459b330-c31d-484e-a8d5-6ecf76918140"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Composition (Authorized - Invalid Write Scope)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjRRcEM1QjlzaWpOVVY0SUtDZVJzWEY3Sl9scnJqMnQ2S0hkMWx4ZzY5d2siLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMzA3MCwiZXhwIjoxNTk3NDk5NDcwLCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJ3cml0ZTpib29rcyJdLCJzdWIiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSJ9.Nrj6t-MESJvQfuqKslHFAUbn4QjU1WNytRmyvM8cBK-v0u5MGT4lRCIIXj6OlKgmijClkVmbx5pGVYGdMmZX3wc3I1rNrn1uMDq-9hJTuMSF4d0tiCAnzGdxtld4bwWnK-RlboRRCnYFR0WVO-9uW_Zu0lB4GldgwJikHM0Fq0chEFMTm139v3G_JzqCEXyVrEX5klBwFz7Qykj4dklIZK4DbO_SthW5re43KXkFy1dzKjbOAC3UqenVpIOAJACZlqGHJ9BMFFGQZbLcOEjlPaH0YQw0Nz8iGIauFCwLPI6WV6DRgSmm_ortbGhO2yaPXznAhKkaD99U8i3NXZLwQQ",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/compositions/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions",
+										"c459b330-c31d-484e-a8d5-6ecf76918140"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Fetch Composition (Authorized - Valid Read Scope)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULm42alZRX0NyWjFLaEJYeTNBZUtWYl9xUURSbDQyaUtCV1hrREFkTy1DUEkiLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMjMwMiwiZXhwIjoxNTk3NDE1OTAyLCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJyZWFkOmJvb2tzIl0sInN1YiI6IjBvYXU4ZWEwSEZtRUpLUVJ2MWQ1In0.IWKFBy_dmngHhvmDWkc3QV68zc41ouIO6Hn2Zx_sxlWIj8fCvWOjT3zxxdXrvRpwtFlngqw-PZmtJ2khWqzpbQ_QdakeORW0Ajys3HAIJd47Venbf3ciEIVF119yIITF_UyEDRq0ZPG7CTJQCV2CGg0NBOwSJkyXWntpbsbz6Pt2N4P1-sLMtu6vJEVR8d4wzDsbaHTG8X2VxG9cQrkypGxAtM_Ya8-_SOIC5eIbUHTK-0cBbNRxon5pMs4dMuAb-T2ZUmuGQF40T1AnnI3iBsIAoknOHTsrw93ztt7AZkKIn_vx7gnK_idHxuLBhC23y1rZCrdBBw_XZ9yalpDpzA",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5000/compositions/c459b330-c31d-484e-a8d5-6ecf76918140",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions",
+										"c459b330-c31d-484e-a8d5-6ecf76918140"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "oauth2",
+						"oauth2": [
+							{
+								"key": "accessToken",
+								"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULnJTaGNoeFRNZGMwWllVN2Y2RS1pU0tNLU5QYXRGcWpaRWVwRVV6RnI4MGMiLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzI3MjM0OCwiZXhwIjoxNTk3Mjc1OTQ4LCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJyZWFkOmJvb2tzIl0sInN1YiI6IjBvYXU4ZWEwSEZtRUpLUVJ2MWQ1In0.YFfJlMH-7skG586-JxOrSmjPKo8QqZqFGMY4O1i7_X7hzO7HeiG_4-nsOkaRiLL6GiPIcn1oerra9XMgb2iY0vj-PAk9GKq2Im3kpEHYMhvWl75gsI2IiUENVSy9R8pROURm32pDxppjF0MyqaYFWN-P731dX9X2p32-8i4cUd1W5ZNbSw4wtdiF32Eh4VFxeTbIScUSajPeQIE_8liggjj5nAbSUAohMwDQxIJvHgXYlZ4Wakx84ojlfkXU2edbRul-zKh7FvHBwrGlWHt6NhmK06Dv7c0urccBSNOh2vUsbOnkrFA7szH_7Pj0L-S-XIW9YbN_FTnAvHsLSvcrwA",
+								"type": "string"
+							},
+							{
+								"key": "tokenType",
+								"value": "Bearer",
+								"type": "string"
+							},
+							{
+								"key": "addTokenTo",
+								"value": "header",
+								"type": "string"
+							}
+						]
+					},
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Writes recordings",
 					"item": [
 						{
 							"name": "POST Recording (Unauthorized)",
@@ -359,6 +529,188 @@
 					],
 					"protocolProfileBehavior": {},
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Writes compositions",
+					"item": [
+						{
+							"name": "POST Compositions (Unauthorized)",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"CompositionId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"CompositionName\": \"Tha Composition Name\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/compositions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Compositions (Unauthorized - Expired Token)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULlBBeHFMNXRrTXk5WVJyWEgxcjJvQ29vbXJacDAwdWhrc0RUQ2pfTS1nR1UiLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMjc0OCwiZXhwIjoxNTk3NDEzMDQ4LCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJ0ZXN0OnF1aWNrX2V4cGlyYXRpb24iXSwic3ViIjoiMG9hdThlYTBIRm1FSktRUnYxZDUifQ.UEQcWVIwdjsYRzhQh8vC7457B01IcZF6GdJQhkztt-nzHrG_uUnVxyK0alv46E6km5QLs3IoCwTWrwtN6k6dlkir8IXaL2BLjrJ6wGHInKtDUBhCbKV-QklyXBPd1OJTrXoTDDDtfb1gJYAlFSKQCJO1qZpGF5kkgx5IAIbdrqaRxvSlYC0OKhBptG0s0UrSNGuMYsyF8AkTjdJS1qSE7axZ8HhduPfkljDrSyEpZzJ7hiWP-EpC1sYQU4TzRCp9UWAGA0U_82jU8OCKblWxcOCNecE4JwTam4pWTtJm8sGwx90AY3tPSIkv2lupb4AM7U3qNq_uZtiOFJI4rH8zFA",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"CompositionId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"CompositionName\": \"Anotha Composition\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/compositions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Composition (Unuthorized - Invalid Read Scope)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULm42alZRX0NyWjFLaEJYeTNBZUtWYl9xUURSbDQyaUtCV1hrREFkTy1DUEkiLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMjMwMiwiZXhwIjoxNTk3NDE1OTAyLCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJyZWFkOmJvb2tzIl0sInN1YiI6IjBvYXU4ZWEwSEZtRUpLUVJ2MWQ1In0.IWKFBy_dmngHhvmDWkc3QV68zc41ouIO6Hn2Zx_sxlWIj8fCvWOjT3zxxdXrvRpwtFlngqw-PZmtJ2khWqzpbQ_QdakeORW0Ajys3HAIJd47Venbf3ciEIVF119yIITF_UyEDRq0ZPG7CTJQCV2CGg0NBOwSJkyXWntpbsbz6Pt2N4P1-sLMtu6vJEVR8d4wzDsbaHTG8X2VxG9cQrkypGxAtM_Ya8-_SOIC5eIbUHTK-0cBbNRxon5pMs4dMuAb-T2ZUmuGQF40T1AnnI3iBsIAoknOHTsrw93ztt7AZkKIn_vx7gnK_idHxuLBhC23y1rZCrdBBw_XZ9yalpDpzA",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"CompositionId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"CompositionName\": \"Composition Name Here\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/compositions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "POST Composition (Authorized Write Scope)",
+							"request": {
+								"auth": {
+									"type": "oauth2",
+									"oauth2": [
+										{
+											"key": "accessToken",
+											"value": "eyJraWQiOiJ3TWI0MnBsMjBQMnYydldfcFhzVU13VjN3eXRaV2pCMUdxYkJCc0h3V2FvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjRRcEM1QjlzaWpOVVY0SUtDZVJzWEY3Sl9scnJqMnQ2S0hkMWx4ZzY5d2siLCJpc3MiOiJodHRwczovL3Byb21ldHJpYy5va3RhcHJldmlldy5jb20vb2F1dGgyL2F1c3U4MzEyOTNJRWJ2dkQyMWQ1IiwiYXVkIjoiaGVsbG9fd29ybGRfYXV0aCIsImlhdCI6MTU5NzQxMzA3MCwiZXhwIjoxNTk3NDk5NDcwLCJjaWQiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSIsInNjcCI6WyJ3cml0ZTpib29rcyJdLCJzdWIiOiIwb2F1OGVhMEhGbUVKS1FSdjFkNSJ9.Nrj6t-MESJvQfuqKslHFAUbn4QjU1WNytRmyvM8cBK-v0u5MGT4lRCIIXj6OlKgmijClkVmbx5pGVYGdMmZX3wc3I1rNrn1uMDq-9hJTuMSF4d0tiCAnzGdxtld4bwWnK-RlboRRCnYFR0WVO-9uW_Zu0lB4GldgwJikHM0Fq0chEFMTm139v3G_JzqCEXyVrEX5klBwFz7Qykj4dklIZK4DbO_SthW5re43KXkFy1dzKjbOAC3UqenVpIOAJACZlqGHJ9BMFFGQZbLcOEjlPaH0YQw0Nz8iGIauFCwLPI6WV6DRgSmm_ortbGhO2yaPXznAhKkaD99U8i3NXZLwQQ",
+											"type": "string"
+										},
+										{
+											"key": "tokenType",
+											"value": "Bearer",
+											"type": "string"
+										},
+										{
+											"key": "addTokenTo",
+											"value": "header",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"CompositionId\": \"c459b330-c31d-484e-a8d5-6ecf76918140\",\r\n    \"CompositionName\": \"Ultimate Composition\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5000/compositions",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5000",
+									"path": [
+										"compositions"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
 				}
 			],
 			"auth": {
@@ -444,7 +796,7 @@
 			"response": []
 		},
 		{
-			"name": "POST book - https://localhost:5001/recordings",
+			"name": "POST recording - https://app-prometric-playback-api-dev.nonprod.proproctor.prometric.com/recordings",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -453,12 +805,15 @@
 					"raw": "{\n    \"TrackName\":\"Name Of The Track\"\n}"
 				},
 				"url": {
-					"raw": "https://localhost:5001/recordings",
+					"raw": "https://app-prometric-playback-api-dev.nonprod.proproctor.prometric.com/recordings",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"app-prometric-playback-api-dev",
+						"nonprod",
+						"proproctor",
+						"prometric",
+						"com"
 					],
-					"port": "5001",
 					"path": [
 						"recordings"
 					]
@@ -467,7 +822,7 @@
 			"response": []
 		},
 		{
-			"name": "GET ID - https://localhost:5001/recordings/{{recordingID}}",
+			"name": "GET ID - https://app-prometric-playback-api-dev.nonprod.proproctor.prometric.com/recordings/{{recordingID}}",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -479,12 +834,15 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "https://localhost:5001/recordings/{{recordingID}}",
+					"raw": "https://app-prometric-playback-api-dev.nonprod.proproctor.prometric.com/recordings/{{recordingID}}",
 					"protocol": "https",
 					"host": [
-						"localhost"
+						"app-prometric-playback-api-dev",
+						"nonprod",
+						"proproctor",
+						"prometric",
+						"com"
 					],
-					"port": "5001",
 					"path": [
 						"recordings",
 						"{{recordingID}}"

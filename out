@@ -1,0 +1,50 @@
+git init
+ll
+dir
+git status
+git remote add origin https://github.com/ApivistaCode/app-prometric-playback-api.git
+git remote set-url origin git@github.com:belindacoetzee/ApivistaCode/app-prometric-playback-api
+git remote -b
+git remote -v
+git log
+dir | more
+git branch
+git status
+code .
+git checkout --orphan master
+git merge --squash trunk
+git commit --allow-empty -m "Initial Commit"
+git push -u origin master
+ssh-agent
+ssh-key -l
+git push -u origin master
+git remote -v
+git remote set-url origin git@github.com:belindacoetzee/ApivistaCode/app-prometric-playback-api.git
+git push -u origin master
+git remote set-url origin git@github.com:ApivistaCode/app-prometric-playback-api.git
+git push -u origin master
+dir
+git status
+git add --all
+git commit -a
+git commit -a -m "Added Recordings Endpoint"
+git push -u origin master
+dir
+rm HellloWorld.postman_collection.json
+delete HellloWorld.postman_collection.json
+del HellloWorld.postman_collection.json
+git status
+git add --all
+git commit -a -m "Remove additional endpoint"
+git push -u origin master
+edit README.md
+notepad README.md
+git add --all
+git commit -a -m "Readme Update"
+git push -u origin master
+git add --all
+git commit -a -m "Dto Update"
+ c:\doskey /history
+C:\doskey /history
+doskey /history
+doskey /history >out

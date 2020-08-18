@@ -6,6 +6,7 @@
             Swagger = "docs/index.html",
             Metrics = "metrics",
             Recordings = "recordings",
+            Composition = "compositions",
             Health = "health";
     }
 }
