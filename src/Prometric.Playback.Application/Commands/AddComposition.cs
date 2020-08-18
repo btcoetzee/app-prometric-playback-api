@@ -6,10 +6,10 @@ namespace Prometric.Playback.Application.Commands
 {
     public class AddComposition : ICommand
     {
-        public AddComposition(Guid compositionId, string trackName)
+        public AddComposition(Guid compositionId, string compositionName)
         {
             CompositionId = compositionId == Guid.Empty ? Guid.NewGuid() : compositionId;
-            CompositionName = trackName;
+            CompositionName = compositionName;
         }
 
         public Guid CompositionId { get; set; }
