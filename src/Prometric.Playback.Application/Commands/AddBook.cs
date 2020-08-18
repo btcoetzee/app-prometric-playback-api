@@ -1,5 +1,4 @@
 ﻿using Convey.CQRS.Commands;
-using Prometric.Playback.Core.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
 
