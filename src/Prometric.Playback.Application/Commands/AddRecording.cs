@@ -1,20 +1,14 @@
-﻿using Convey.CQRS.Commands;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Convey.CQRS.Commands;
+using Prometric.Playback.Application.Entities;
 
-namespace Prometric.Playback.Application.Commands
-{
-    public class AddRecording : ICommand
+public class AddRecording : ICommand
     {
-        public AddRecording(Guid recordingId, string trackName)
+        public AddRecording(IRecordingStatusCallback recordingStatusCallback)
         {
-            RecordingId = recordingId == Guid.Empty ? Guid.NewGuid() : recordingId;
-            TrackName = trackName;
+            RecordingStatusCallback = recordingStatusCallback ?? throw new ArgumentNullException(nameof(recordingStatusCallback));
         }
-
-        public Guid RecordingId { get; set; }
-
         [Required]
-        public string TrackName { get; set; }
+        public IRecordingStatusCallback RecordingStatusCallback { get; set; }
     }
-}
