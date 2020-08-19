@@ -16,6 +16,7 @@ using Prometric.Playback.Application.Queries;
 using Prometric.Playback.Application.DTO;
 using Prometric.Playback.Infrastructure.Scopes;
 using Convey.Persistence.Redis;
+using System.Web;
 
 namespace Prometric.Playback.Api
 {
@@ -45,14 +46,12 @@ namespace Prometric.Playback.Api
                                     })
                                 // Recordings
                                    .Post<AddRecording>(Routes.Recordings,
-                                        afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Recordings}/{cmd.RecordingId}"),
-                                        auth: true, policies: PlaybackScopes.WRITE_PAYLOAD)
-                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}", auth: true,  policies: PlaybackScopes.READ_PAYLOAD)
+                                        afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Recordings}"))
+                                    .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}")
                                // Compositions
                                    .Post<AddComposition>(Routes.Composition,
-                                        afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Composition}/{cmd.CompositionId}"),
-                                        auth: true, policies: PlaybackScopes.WRITE_PAYLOAD)
-                                    .Get<GetComposition, CompositionDto>($"{Routes.Composition}/{{compositionId}}", auth: true, policies: PlaybackScopes.READ_PAYLOAD)
+                                        afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Composition}/{cmd.CompositionId}"))
+                                    .Get<GetComposition, CompositionDto>($"{Routes.Composition}/{{compositionId}}")
                                 // Health
                                     .Get(Routes.Health, httpContext => {
                                         return httpContext.Response.WriteAsync("OK");

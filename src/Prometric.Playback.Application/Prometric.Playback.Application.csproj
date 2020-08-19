@@ -10,6 +10,7 @@
     <PackageReference Include="Convey.CQRS.Events" Version="0.4.330" />
     <PackageReference Include="Convey.CQRS.Queries" Version="0.4.330" />
     <PackageReference Include="Convey.WebApi" Version="0.4.330" />
+    <PackageReference Include="Twilio" Version="5.45.2" />
   </ItemGroup>
 
   <ItemGroup>
