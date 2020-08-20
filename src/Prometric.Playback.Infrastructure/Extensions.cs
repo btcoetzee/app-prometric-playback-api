@@ -13,10 +13,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Prometric.Playback.Application;
 using Prometric.Playback.Application.Commands.Handlers;
+using Prometric.Playback.Application.Services.Clients;
 using Prometric.Playback.Core.Repositories;
 using Prometric.Playback.Infrastructure.Logging;
 using Prometric.Playback.Infrastructure.Redis.Repositories;
 using Prometric.Playback.Infrastructure.Scopes;
+using Prometric.Playback.Infrastructure.Services.Clients;
+using Twilio.TwiML.Voice;
 
 namespace Prometric.Playback.Infrastructure
 {
@@ -24,10 +27,11 @@ namespace Prometric.Playback.Infrastructure
     {
         public static IConveyBuilder AddInfrastructure(this IConveyBuilder builder)
         {
-
-
             // Recordings
-            builder.Services.AddTransient<ITwilioService, TwilioService>();
+            builder.Services.AddTransient<ITwilioService, TwilioService>()
+                .AddTransient<IExamSessionsClient, ExamSessionsClient>()
+                .AddTransient<IConferencesClient, ConferencesClient>();
+
             builder.Services.AddTransient<IRecordingRepository, RedisRecordingRepository>();
             builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             builder.Services.AddAuthorization(options =>

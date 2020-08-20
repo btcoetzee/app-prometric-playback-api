@@ -54,7 +54,7 @@ namespace Prometric.Playback.Api
         .Post(Routes.Recordings, async (ctx) => await ctx.SendAsync(await FromRequestBody<AddRecording>(ctx)))
         .Post(Routes.Composition, async (ctx) => {
             var command = await FromRequestBody<AddComposition>(ctx);
-            command.PercentageDone =  ctx.Args<string>("ExamSessionLabel");
+            command.ExamSessionLabel =  ctx.Args<string>("ExamSessionLabel");
             await ctx.SendAsync(command);
         })
     ))
