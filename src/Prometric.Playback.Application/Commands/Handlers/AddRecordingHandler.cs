@@ -24,7 +24,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
 
         public async Task HandleAsync(AddRecording command)
         {
-            _log.LogInformation(JsonConvert.SerializeObject(command));
+            _log?.LogInformation(JsonConvert.SerializeObject(command));
 
             // Fetch relevant recordings for room, participant, and after the current timestamp (adjusted for latency)
             var recordings = await _service.FetchRecordings(
@@ -34,7 +34,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
             {
                 recordings.ToList().ForEach(r =>
                 {
-                    _log.LogInformation($"Fetched recording: {r.Sid} {r.Type} {r.DateCreated}");
+                    _log?.LogInformation($"Fetched recording: {r.Sid} {r.Type} {r.DateCreated}");
                 });
 
                 var videoIds = recordings.Where(r => r.Type.Equals(RecordingResource.TypeEnum.Video))

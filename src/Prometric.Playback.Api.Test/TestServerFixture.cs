@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prometric.Playback.Application.Commands.Handlers;
 using System;
@@ -16,7 +17,6 @@ namespace Prometric.Playback.Api.Test
         public TestServerFixture()
         {
             var twilio = new Mock<ITwilioService>();
-
             twilio.Setup(_ => _
                 .FetchRecordings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime>()))
                 .Returns(Task.FromResult<ResourceSet<RecordingResource>>(null));
