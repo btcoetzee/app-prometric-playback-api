@@ -12,7 +12,7 @@ variables:
   buildMajor: 1
   buildMinor: 0
   buildVersion: $(buildMajor).$(buildMinor)
-  serviceName: app-prometric-playback-api
+  serviceName: app-proproctor-playback-api
 stages:
 - stage: build_and_publication
   displayName: Build - Test - Package - Publish
