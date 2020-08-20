@@ -52,13 +52,18 @@ namespace Prometric.Playback.Api
         .Get(Routes.Health, httpContext => httpContext.Response.WriteAsync("OK"))
         // Recording-complete webhook callback
         .Post(Routes.Recordings, async (ctx) => await ctx.SendAsync(await FromRequestBody<AddRecording>(ctx)))
-        .Post(Routes.Composition, async (ctx) => await ctx.SendAsync(await FromRequestBody<AddComposition>(ctx)))
+        .Post(Routes.Composition, async (ctx) => {
+            var command = await FromRequestBody<AddComposition>(ctx);
+            command.PercentageDone =  ctx.Args<string>("ExamSessionLabel");
+            await ctx.SendAsync(command);
+        })
     ))
     .UseLogging();
         }
 
         public static async Task<T> FromRequestBody<T>(HttpContext ctx)
         {
+
             ctx.Request.EnableBuffering(); // Enable seeking            
             var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
             //  Set the position of the stream to 0 to enable rereading

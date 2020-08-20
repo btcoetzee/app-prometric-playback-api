@@ -17,6 +17,7 @@ namespace Prometric.Playback.Application.Commands
         public string PercentageDone {get; set;}
         public string SecondsRemaining {get; set;}
         public string StatusCallbackEvent {get; set;}
-        public System.DateTime Timestamp {get; set;}
+        public System.DateTime Timestamp { get; set; }
+        public string ExamSessionLabel { get; set; }
     }
 }
