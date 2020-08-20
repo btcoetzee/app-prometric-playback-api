@@ -54,10 +54,8 @@ namespace Prometric.Playback.Api
         .Post(Routes.Recordings, 
         async (ctx) => {
             ctx.Request.EnableBuffering(); // Enable seeking            
-            var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
-            
-            //  Set the position of the stream to 0 to enable rereading
-            ctx.Request.Body.Position = 0;            
+            var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();            
+            ctx.Request.Body.Position = 0; //  Set the position of the stream to 0 to enable rereading
             string[] args = bodyAsText.Split("&");
             var dict = new Dictionary<string, string>();
             foreach (string arg in args) {
@@ -75,8 +73,6 @@ namespace Prometric.Playback.Api
                 addRecording.Timestamp = System.DateTime.Parse(HttpUtility.UrlDecode(dict[nameof(addRecording.Timestamp)]));
                 addRecording.ParticipantSid = dict[nameof(addRecording.ParticipantSid)];
                 addRecording.ParticipantIdentity = dict[nameof(addRecording.ParticipantIdentity)];
-
-                Console.WriteLine(bodyAsText);
                 await ctx.SendAsync(addRecording);
             }
         })
