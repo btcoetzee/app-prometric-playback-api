@@ -4,6 +4,10 @@ using Prometric.Playback.Core.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+<<<<<<< HEAD
+=======
+using Twilio;
+>>>>>>> 544b964da98a024b2540cf31b57df15e5f4ebe84
 using Twilio.Rest.Video.V1;
 using System.Linq;
 using static Twilio.Rest.Video.V1.CompositionResource;
@@ -36,7 +40,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
                 roomSid: command.RoomSid,
                 audioSources: recordings.Where(record => record.Type.ToString() == "audio").Select(record => record.Sid).ToList(),
                 videoLayout: layout,
-                statusCallback: new Uri("https://01d7c01c207a.ngrok.io/compositions"),
+                statusCallback: new Uri("REPLACE_ME"),
                 format: FormatEnum.Mp4
             );
         }
