@@ -1,6 +1,4 @@
 ﻿using Convey.CQRS.Commands;
-using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Prometric.Playback.Application.Commands
 {
