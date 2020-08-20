@@ -27,7 +27,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
             var recordings = await _service.FetchRecordings(
                 command.RoomSid, command.ParticipantSid, command.Timestamp);
 
-            if (recordings != null)
+            if (recordings != null && recordings.Any())
             {
                 var videoIds = recordings.Where(r => r.Type.Equals(RecordingResource.TypeEnum.Video))
                     .Select(record => record.Sid)
@@ -38,7 +38,8 @@ namespace Prometric.Playback.Application.Commands.Handlers
                     .ToList();
 
                 // Post a new Composition to the Twilio API, use our composition callback
-                await _service.CreateComposition(command.RoomSid, audioTrackIds, videoIds);
+                if (videoIds.Any() && audioTrackIds.Any())                
+                    await _service.CreateComposition(command.RoomSid, audioTrackIds, videoIds);
             }
         }
     }

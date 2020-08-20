@@ -53,27 +53,37 @@ namespace Prometric.Playback.Api
         // Recording-complete webhook callback
         .Post(Routes.Recordings, 
         async (ctx) => {
-            ctx.Request.EnableBuffering(); // Enable seeking            
-            var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();            
-            ctx.Request.Body.Position = 0; //  Set the position of the stream to 0 to enable rereading
-            string[] args = bodyAsText.Split("&");
-            var dict = new Dictionary<string, string>();
-            foreach (string arg in args) {
-                var kv = arg.Split("=");
-                dict.Add(kv[0], kv[1]);
+            try
+            {
+                ctx.Request.EnableBuffering(); // Enable seeking            
+                var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
+                ctx.Request.Body.Position = 0; //  Set the position of the stream to 0 to enable rereading
+                string[] args = bodyAsText.Split("&");
+                var dict = new Dictionary<string, string>();
+                foreach (string arg in args)
+                {
+                    var kv = arg.Split("=");
+                    dict.Add(kv[0], kv[1]);
+                }
+                // Only forward the request if the event is a recording-completed event and the participant's identity is the candidate
+                if (dict["StatusCallbackEvent"] == "recording-completed"
+                    && dict["ParticipantIdentity"] == "candidate"
+                    && dict["Container"] == "mkv")
+                {
+                    var addRecording = new AddRecording();
+                    addRecording.RoomSid = dict[nameof(addRecording.RoomSid)];
+                    addRecording.RoomName = dict[nameof(addRecording.RoomName)];
+                    addRecording.StatusCallbackEvent = dict[nameof(addRecording.StatusCallbackEvent)];
+                    addRecording.Timestamp = System.DateTime.Parse(HttpUtility.UrlDecode(dict[nameof(addRecording.Timestamp)]));
+                    addRecording.ParticipantSid = dict[nameof(addRecording.ParticipantSid)];
+                    addRecording.ParticipantIdentity = dict[nameof(addRecording.ParticipantIdentity)];
+                    await ctx.SendAsync(addRecording);
+                }
             }
-            // Only forward the request if the event is a recording-completed event and the participant's identity is the candidate
-            if (dict["StatusCallbackEvent"] == "recording-completed" 
-                && dict["ParticipantIdentity"] == "candidate"
-                && dict["Container"] == "mkv") {
-                var addRecording = new AddRecording();
-                addRecording.RoomSid = dict[nameof(addRecording.RoomSid)];
-                addRecording.RoomName = dict[nameof(addRecording.RoomName)];
-                addRecording.StatusCallbackEvent = dict[nameof(addRecording.StatusCallbackEvent)];
-                addRecording.Timestamp = System.DateTime.Parse(HttpUtility.UrlDecode(dict[nameof(addRecording.Timestamp)]));
-                addRecording.ParticipantSid = dict[nameof(addRecording.ParticipantSid)];
-                addRecording.ParticipantIdentity = dict[nameof(addRecording.ParticipantIdentity)];
-                await ctx.SendAsync(addRecording);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
             }
         })
         .Post(Routes.Composition,

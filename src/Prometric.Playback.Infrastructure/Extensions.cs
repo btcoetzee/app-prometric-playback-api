@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Prometric.Playback.Application;
+using Prometric.Playback.Application.Commands.Handlers;
 using Prometric.Playback.Core.Repositories;
 using Prometric.Playback.Infrastructure.Logging;
 using Prometric.Playback.Infrastructure.Redis.Repositories;
@@ -26,6 +27,7 @@ namespace Prometric.Playback.Infrastructure
 
 
             // Recordings
+            builder.Services.AddTransient<ITwilioService, TwilioService>();
             builder.Services.AddTransient<IRecordingRepository, RedisRecordingRepository>();
             builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             builder.Services.AddAuthorization(options =>
