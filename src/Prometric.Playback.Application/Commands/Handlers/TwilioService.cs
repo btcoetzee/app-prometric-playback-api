@@ -15,12 +15,12 @@ namespace Prometric.Playback.Application.Commands.Handlers
                 },
                 dateCreatedAfter: timestamp.AddMinutes(-1));
 
-        public async Task CreateComposition(string roomSid, List<string> audioTrackIds, List<string> videoIds)
+        public async Task CreateComposition(string roomSid, List<string> audioTrackIds, List<string> videoIds, string compositionCallbackUri)
             => await CompositionResource.CreateAsync(
                 roomSid: roomSid,
                 audioSources: audioTrackIds,
                 videoLayout: new { single = new { video_sources = videoIds } },
-                statusCallback: new Uri("REPLACE_ME"),
+                statusCallback: new Uri(compositionCallbackUri),
                 format: CompositionResource.FormatEnum.Mp4
             );
     }

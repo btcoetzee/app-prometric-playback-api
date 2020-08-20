@@ -5,8 +5,8 @@ using Twilio.Rest.Video.V1;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using ProProctor.Conferences.Infrastructure.Services;
-using System.Resources;
 using Newtonsoft.Json;
+using Convey.HTTP;
 
 namespace Prometric.Playback.Application.Commands.Handlers
 {
@@ -14,12 +14,16 @@ namespace Prometric.Playback.Application.Commands.Handlers
     {
         private readonly ILogger<AddRecordingHandler> _log;
         private readonly ITwilioService _service;
+        private string _compositionCallbackUri;
 
         public AddRecordingHandler(ILogger<AddRecordingHandler> log, 
-            IConfiguration config, ITwilioService service)
+            IConfiguration config, ITwilioService service, HttpClientOptions options)
         {
             TwilioClientConfig.InitTwilioClient(config);
             _service = service;
+
+            if(options.Services.ContainsKey("composition"))
+                _compositionCallbackUri = options.Services["composition"];
         }
 
         public async Task HandleAsync(AddRecording command)
@@ -47,7 +51,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
 
                 // Post a new Composition to the Twilio API, use our composition callback
                 if (videoIds.Any() && audioTrackIds.Any())                
-                    await _service.CreateComposition(command.RoomSid, audioTrackIds, videoIds);
+                    await _service.CreateComposition(command.RoomSid, audioTrackIds, videoIds, _compositionCallbackUri);
             }
         }
     }
