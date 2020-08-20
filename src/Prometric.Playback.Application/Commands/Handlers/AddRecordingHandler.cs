@@ -37,7 +37,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
                 roomSid: command.RoomSid,
                 audioSources: recordings.Where(record => record.Type.ToString() == "audio").Select(record => record.Sid).ToList(),
                 videoLayout: layout,
-                statusCallback: new Uri("https://01d7c01c207a.ngrok.io/compositions"),
+                statusCallback: new Uri("REPLACE_ME"),
                 format: FormatEnum.Mp4
             );
         }
