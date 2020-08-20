@@ -24,7 +24,7 @@ namespace Prometric.Playback.Api.Test
                 "RoomName=1f03d8d2-4837-4c99-b1cf-e279ba097b17&" + 
                 "SourceSid=MT863e43b23ad81723cc410f548045c6e3&" + 
                 "Size=105956&" + 
-                "ParticipantIdentity=candidate&" + 
+                "ParticipantIdentity=ad9d1899-0a48-4cc5-a601-da0b33e4d726&" + 
                 "RecordingSid=RT2c3f5a84328cb488376b45c221f27998&" + 
                 "Duration=3&" + 
                 "StatusCallbackEvent=recording-completed&" + 
