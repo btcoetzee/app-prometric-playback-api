@@ -125,6 +125,12 @@ stages:
               pip install -r requirements.txt
               python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
             displayName: Generates Kubernetes deployment manifests
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'DE_NONPROD'
+              KeyVaultName: 'akv-ppe-nonprod'
+              SecretsFilter: '*'
+              RunAsPreJob: true
           - task: Kubernetes@1
             displayName: Application image deployment to K8s.
             inputs:
@@ -173,6 +179,12 @@ stages:
               pip install -r requirements.txt
               python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
             displayName: Generates Kubernetes deployment manifests
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'DE_NONPROD'
+              KeyVaultName: 'akv-ppe-nonprod'
+              SecretsFilter: '*'
+              RunAsPreJob: true
           - task: Kubernetes@1
             displayName: Application image deployment to K8s.
             inputs:
@@ -221,6 +233,12 @@ stages:
               pip install -r requirements.txt
               python kubernetes/render deployment -a $(deployment_name) -n $(namespace) -v $(buildid) -s $(stage) -d $(dnsDomain) -e ASPNETCORE_ENVIRONMENT:$(stage) -p $(aadPodIdentityName) -c $(agwSslCertificateName)
             displayName: Generates Kubernetes deployment manifests
+          - task: AzureKeyVault@1
+            inputs:
+              azureSubscription: 'DE_NONPROD'
+              KeyVaultName: 'akv-ppe-nonprod'
+              SecretsFilter: '*'
+              RunAsPreJob: true
           - task: Kubernetes@1
             displayName: Application image deployment to K8s.
             inputs:

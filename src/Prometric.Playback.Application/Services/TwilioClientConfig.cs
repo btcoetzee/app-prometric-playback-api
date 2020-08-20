@@ -11,12 +11,18 @@ namespace ProProctor.Conferences.Infrastructure.Services
 
         public static void InitTwilioClient(IConfiguration configuration)
         {
-            var twilio = configuration.GetSection("twilio");
-            AccountSID = twilio["AccountSID"];
-            AuthToken = twilio["AuthToken"];
+            try
+            {
+                var twilio = configuration.GetSection("twilio");
+                AccountSID = twilio["AccountSID"];
+                AuthToken = twilio["AuthToken"];
 
-            if (hasValue(AccountSID) && hasValue(AuthToken))
-                TwilioClient.Init(AccountSID, AuthToken);
+                if (hasValue(AccountSID) && hasValue(AuthToken))
+                    TwilioClient.Init(AccountSID, AuthToken);
+            }
+            catch
+            {
+            }
         }
 
         private static bool hasValue(string s)

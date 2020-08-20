@@ -6,11 +6,11 @@ using Xunit;
 namespace Prometric.Playback.Api.Test
 {
     [Collection("TestServerFixture")]
-    public class Webhook
+    public class AddRecording
     {
         private readonly HttpClient _httpClient;
 
-        public Webhook(TestServerFixture testServerFixture)
+        public AddRecording(TestServerFixture testServerFixture)
         {
             _httpClient = testServerFixture.TestServer.CreateClient();
         }
@@ -36,7 +36,7 @@ namespace Prometric.Playback.Api.Test
                 "RoomType=group-small&" + 
                 "OffsetFromTwilioVideoEpoch=155137307765&" + 
                 "TrackName=6ec82db2-390d-47d2-aec8-0e6606f15c51&" + 
-                "ParticipantSid=PAec462533b0a659b7eb122a7ff9e2312e"
+                "ParticipantSid=PAec462533b0a659b7eb122a7ff9e2312e",
                 Encoding.UTF8);
 
             var response = await _httpClient.PostAsync(Routes.Recordings, content);
