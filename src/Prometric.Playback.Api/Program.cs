@@ -10,15 +10,11 @@ using System.Threading.Tasks;
 using Convey.Logging;
 using Prometric.Playback.Application;
 using Prometric.Playback.Infrastructure;
-using System.Text;
-using Prometric.Playback.Application.Commands;
-using Prometric.Playback.Application.Queries;
-using Prometric.Playback.Application.DTO;
-using Prometric.Playback.Infrastructure.Scopes;
 using Convey.Persistence.Redis;
 using System.Web;
 using System.IO;
 using System.Collections.Generic;
+using System;
 
 namespace Prometric.Playback.Api
 {
@@ -49,23 +45,43 @@ namespace Prometric.Playback.Api
             var appOptions = httpContext.RequestServices.GetService<AppOptions>();
             return httpContext.Response.WriteAsync($"{appOptions.Name} {appOptions.Version}");
         })
-       // Recordings
-       .Post<AddRecording>(Routes.Recordings,
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Recordings}"))
-        .Get<GetRecording, RecordingDto>($"{Routes.Recordings}/{{recordingId}}")
-       // Compositions
-       .Post<AddComposition>(Routes.Composition,
-            afterDispatch: (cmd, ctx) => ctx.Response.Created($"{Routes.Composition}/{cmd.CompositionId}"))
-        .Get<GetComposition, CompositionDto>($"{Routes.Composition}/{{compositionId}}")
         // Health
         .Get(Routes.Health, httpContext =>
         {
             return httpContext.Response.WriteAsync("OK");
         })
-
-        .Post("webhook", 
+        // Recording-complete webhook callback
+        .Post(Routes.Recordings, 
         async (ctx) => {
+            ctx.Request.EnableBuffering(); // Enable seeking            
+            var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
             
+            //  Set the position of the stream to 0 to enable rereading
+            ctx.Request.Body.Position = 0;            
+            string[] args = bodyAsText.Split("&");
+            var dict = new Dictionary<string, string>();
+            foreach (string arg in args) {
+                var kv = arg.Split("=");
+                dict.Add(kv[0], kv[1]);
+            }
+            // Only forward the request if the event is a recording-completed event and the participant's identity is the candidate
+            if (dict["StatusCallbackEvent"] == "recording-completed" 
+                && dict["ParticipantIdentity"] == "candidate"
+                && dict["Container"] == "mkv") {
+                var addRecording = new AddRecording();
+                addRecording.RoomSid = dict[nameof(addRecording.RoomSid)];
+                addRecording.RoomName = dict[nameof(addRecording.RoomName)];
+                addRecording.StatusCallbackEvent = dict[nameof(addRecording.StatusCallbackEvent)];
+                addRecording.Timestamp = System.DateTime.Parse(HttpUtility.UrlDecode(dict[nameof(addRecording.Timestamp)]));
+                addRecording.ParticipantSid = dict[nameof(addRecording.ParticipantSid)];
+                addRecording.ParticipantIdentity = dict[nameof(addRecording.ParticipantIdentity)];
+
+                Console.WriteLine(bodyAsText);
+                await ctx.SendAsync(addRecording);
+            }
+        })
+        .Post(Routes.Composition,
+        async (ctx) => {
             ctx.Request.EnableBuffering(); // Enable seeking            
             var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
             
@@ -78,18 +94,24 @@ namespace Prometric.Playback.Api
                 dict.Add(kv[0], kv[1]);
             }
 
-            var webhook = new Webhook();
-            webhook.RoomStatus = dict[nameof(webhook.RoomStatus)];
-            webhook.RoomType = dict[nameof(webhook.RoomType)];
-            webhook.RoomSid = dict[nameof(webhook.RoomSid)];
-            webhook.RoomName = dict[nameof(webhook.RoomName)];
-            webhook.RoomDuration = dict[nameof(webhook.RoomDuration)];
-            webhook.SequenceNumber = dict[nameof(webhook.SequenceNumber)];
-            webhook.StatusCallbackEvent = dict[nameof(webhook.StatusCallbackEvent)];
-            webhook.Timestamp = dict[nameof(webhook.Timestamp)];
-            webhook.AccountSid = dict[nameof(webhook.AccountSid)];
+            /**
+            * KYLE REPLACE ME
+            **/
+            // Only forward the request if the event is a recording-completed event and the participant's identity is the candidate
+            if (dict["StatusCallbackEvent"] == "recording-completed" 
+                && dict["ParticipantIdentity"] == "candidate"
+                && dict["Container"] == "mkv") {
+                var addRecording = new AddRecording();
+                addRecording.RoomSid = dict[nameof(addRecording.RoomSid)];
+                addRecording.RoomName = dict[nameof(addRecording.RoomName)];
+                addRecording.StatusCallbackEvent = dict[nameof(addRecording.StatusCallbackEvent)];
+                addRecording.Timestamp = System.DateTime.Parse(HttpUtility.UrlDecode(dict[nameof(addRecording.Timestamp)]));
+                addRecording.ParticipantSid = dict[nameof(addRecording.ParticipantSid)];
+                addRecording.ParticipantIdentity = dict[nameof(addRecording.ParticipantIdentity)];
 
-            await ctx.SendAsync(webhook);
+                Console.WriteLine(bodyAsText);
+                await ctx.SendAsync(addRecording);
+            }
         })
     )
 )
