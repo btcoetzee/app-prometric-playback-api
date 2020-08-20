@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using ProProctor.Conferences.Infrastructure.Services;
 using System.Resources;
+using Newtonsoft.Json;
 
 namespace Prometric.Playback.Application.Commands.Handlers
 {
@@ -23,12 +24,19 @@ namespace Prometric.Playback.Application.Commands.Handlers
 
         public async Task HandleAsync(AddRecording command)
         {
+            _log.LogInformation(JsonConvert.SerializeObject(command));
+
             // Fetch relevant recordings for room, participant, and after the current timestamp (adjusted for latency)
             var recordings = await _service.FetchRecordings(
                 command.RoomSid, command.ParticipantSid, command.Timestamp);
 
             if (recordings != null && recordings.Any())
             {
+                recordings.ToList().ForEach(r =>
+                {
+                    _log.LogInformation($"Fetched recording: {r.Sid} {r.Type} {r.DateCreated}");
+                });
+
                 var videoIds = recordings.Where(r => r.Type.Equals(RecordingResource.TypeEnum.Video))
                     .Select(record => record.Sid)
                     .ToList();

@@ -57,6 +57,9 @@ namespace Prometric.Playback.Api
             {
                 ctx.Request.EnableBuffering(); // Enable seeking            
                 var bodyAsText = await new StreamReader(ctx.Request.Body).ReadToEndAsync();
+
+                Console.WriteLine(bodyAsText);
+
                 ctx.Request.Body.Position = 0; //  Set the position of the stream to 0 to enable rereading
                 string[] args = bodyAsText.Split("&");
                 var dict = new Dictionary<string, string>();
