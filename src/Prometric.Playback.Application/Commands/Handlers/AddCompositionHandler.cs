@@ -53,6 +53,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
             _compositionFileName = _commandIn.ExamSessionLabel + ".mp4";
             _compositionFilePath = Path.Combine(BASE_COMPOSITION_PATH, _compositionFileName);
             var uri = CreateCompositionUri(command.CompositionUri);
+            _log?.LogInformation($"Downloading Twilio composition file - from {uri}, to {_compositionFilePath}");
             _webClient.DownloadFileAsync(uri, _compositionFilePath);
         }
 
@@ -68,6 +69,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
         // Async Event handler that pushes transcode job to AMS
         public async void PushToAMSAsync(object sender, EventArgs e) {
             Console.WriteLine("Download Completed... Uploading to AMS");
+            _log?.LogInformation($"Twilio Composition download complete to {_compositionFilePath}");
             string jobName = _commandIn.ExamSessionLabel;
             string amsAssetNameIn = "assetIn--" + _compositionFileName;
             string amsAssetNameOut = _commandIn.ExamSessionLabel;
@@ -108,7 +110,8 @@ namespace Prometric.Playback.Application.Commands.Handlers
                 AdaptiveStreamingTransformName,
                 jobName,
                 amsAssetNameIn,
-                outputAsset.Name);
+                outputAsset.Name,
+                _log);
 
             // Remove local files
             Cleanup(_compositionFileName);
@@ -225,13 +228,15 @@ namespace Prometric.Playback.Application.Commands.Handlers
             string resourceGroupName, string accountName, string transformName,
             string jobName,
             string inputAssetName,
-            string outputAssetName)
+            string outputAssetName,
+            ILogger log)
         {
             // Set job input/output
             JobInput jobInput = new JobInputAsset(assetName: inputAssetName);
             JobOutput[] jobOutputs = { new JobOutputAsset(outputAssetName) };
 
             // Create the job
+            log?.LogInformation($"Creating AMS Job {jobName}");
             Job job = await client.Jobs.CreateAsync(
                 resourceGroupName,
                 accountName,
@@ -242,7 +247,7 @@ namespace Prometric.Playback.Application.Commands.Handlers
                     Input = jobInput,
                     Outputs = jobOutputs,
                 });
-
+            log?.LogInformation($"AMS Job created {jobName}");
             return job;
         }
 
