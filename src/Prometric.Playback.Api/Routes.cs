@@ -6,7 +6,7 @@
             Swagger = "docs/index.html",
             Metrics = "metrics",
             Recordings = "recordings",
-            Composition = "compositions",
+            Composition = "compositions/{ExamSessionLabel}",
             Health = "health";
     }
 }
