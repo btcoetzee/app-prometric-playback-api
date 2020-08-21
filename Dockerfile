@@ -7,6 +7,7 @@ RUN dotnet publish "src/Prometric.Playback.Api/Prometric.Playback.Api.csproj" -c
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
 WORKDIR /app
+RUN mkdir twilio-compositions
 EXPOSE 80
 EXPOSE 443
 

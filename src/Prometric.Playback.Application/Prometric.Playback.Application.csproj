@@ -5,12 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.5.1" />
     <PackageReference Include="Convey" Version="0.4.330" />
     <PackageReference Include="Convey.CQRS.Commands" Version="0.4.330" />
     <PackageReference Include="Convey.CQRS.Events" Version="0.4.330" />
     <PackageReference Include="Convey.CQRS.Queries" Version="0.4.330" />
     <PackageReference Include="Convey.HTTP" Version="0.4.330" />
     <PackageReference Include="Convey.WebApi" Version="0.4.330" />
+    <PackageReference Include="Microsoft.Azure.Management.Media" Version="2.0.5" />
+    <PackageReference Include="Microsoft.Azure.Storage.Blob" Version="11.2.2" />
+    <PackageReference Include="Microsoft.Rest.ClientRuntime.Azure.Authentication" Version="2.4.1" />
     <PackageReference Include="Twilio" Version="5.45.2" />
   </ItemGroup>
 

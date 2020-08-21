@@ -13,7 +13,7 @@ namespace ProProctor.Conferences.Infrastructure.Services
         {
             try
             {
-                var twilio = configuration.GetSection("twilio");
+                var twilio = configuration.GetSection("ams");
                 AccountSID = twilio["AccountSID"];
                 AuthToken = twilio["AuthToken"];
 
